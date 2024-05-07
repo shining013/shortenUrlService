@@ -1,7 +1,6 @@
 package kr.co.shortenurlservice.presentation;
 
 import jakarta.validation.constraints.NotNull;
-import kr.co.shortenurlservice.domain.ShortenUrl;
 import org.hibernate.validator.constraints.URL;
 
 public class ShortenUrlCreateRequestDto {
@@ -12,5 +11,4 @@ public class ShortenUrlCreateRequestDto {
     public String getOriginalUrl() {
         return originalUrl;
     }
-
 }
