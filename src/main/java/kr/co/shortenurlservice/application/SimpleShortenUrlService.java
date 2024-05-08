@@ -21,27 +21,26 @@ public class SimpleShortenUrlService {
 
     public ShortenUrlCreateResponseDto generateShortenUrl(ShortenUrlCreateRequestDto shortenUrlCreateRequestDto) {
         String originalUrl = shortenUrlCreateRequestDto.getOriginalUrl();
-        String shortenUrlKey = "";
-
-        final int MAX_RETRY_COUNT = 5;
-        int count = 0;
-
-        while(count++ < MAX_RETRY_COUNT) {
-            shortenUrlKey = ShortenUrl.generateShortenUrlKey();
-            ShortenUrl shortenUrl = shortenUrlRepository.findShortenUrlByShortenUrlKey(shortenUrlKey);
-
-            if (null == shortenUrl)
-                break;
-        }
-
-        if (count > MAX_RETRY_COUNT)
-            throw new LackOfShortenUrlKeyException();
+        String shortenUrlKey = getUniqueShortenUrlKey();
 
         ShortenUrl shortenUrl = new ShortenUrl(originalUrl, shortenUrlKey);
         shortenUrlRepository.saveShortenUrl(shortenUrl);
 
         ShortenUrlCreateResponseDto shortenUrlCreateResponseDto = new ShortenUrlCreateResponseDto(shortenUrl);
         return shortenUrlCreateResponseDto;
+    }
+
+    public String getUniqueShortenUrlKey() {
+        final int MAX_RETRY_COUNT = 5;
+        int count = 0;
+
+        while(count++ < MAX_RETRY_COUNT) {
+            String shortenUrlKey = ShortenUrl.generateShortenUrlKey();
+            ShortenUrl shortenUrl = shortenUrlRepository.findShortenUrlByShortenUrlKey(shortenUrlKey);
+            if (null == shortenUrl)
+                return shortenUrlKey;
+        }
+        throw new LackOfShortenUrlKeyException();
     }
 
     public ShortenUrlInformationDto getShortenUrlInformationByShortenUrlKey(String shortenUrlKey) {
