@@ -30,7 +30,7 @@ public class SimpleShortenUrlService {
         return shortenUrlCreateResponseDto;
     }
 
-    public String getUniqueShortenUrlKey() {
+    private String getUniqueShortenUrlKey() {
         final int MAX_RETRY_COUNT = 5;
         int count = 0;
 
